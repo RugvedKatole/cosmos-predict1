@@ -20,6 +20,7 @@ checkpoints/*
 datasets/*
 !datasets/README.md
 apex/
+Animal*
 
 # Data types
 *.jit
@@ -40,6 +41,7 @@ apex/
 *.png
 *.pdf
 *.mp4
+*.log
 
 # Other uncheckable file types
 *.zip
