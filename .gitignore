@@ -37,6 +37,8 @@ apex/
 *.bin
 *.pickle
 *.txt
+*.png
+*.pdf
 
 # Other uncheckable file types
 *.zip
