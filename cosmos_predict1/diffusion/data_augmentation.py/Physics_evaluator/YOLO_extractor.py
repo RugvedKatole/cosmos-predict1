@@ -74,48 +74,13 @@ class YOLO_ADAE():
         Returns:
             Feature embeddings as numpy array
         """
-        if self.model is None:
-            print("Model not loaded properly.")
-            return None
-        
-        try:
-            # Handle different input types
-            if isinstance(image_path, str):
-                if not os.path.exists(image_path):
-                    print(f"Image path does not exist: {image_path}")
-                    return None
-                image = Image.open(image_path).convert('RGB')
-                # Convert to tensor and preprocess according to YOLO requirements
-                image = self.model.predictor.preprocess([image])[0]
-            else:
-                # Assume it's already a properly formatted tensor/array
-                image = image_path
-                
-            # Access the backbone and neck of the model (without detection head)
-            with torch.no_grad():
-                # Forward pass through the backbone and neck only
-                model = self.model.predictor.model.model
-                # Get feature maps before the detection head
-                x = image.to(self.device)
-                
-                # This implementation is specific to YOLOv8 architecture
-                # Access the model before the detection head layers
-                for i, module in enumerate(model):
-                    # Skip the detection head (usually the last module)
-                    if i == len(model) - 1:
-                        break
-                    x = module(x)
-                
-                # Global Average Pooling to get a fixed-size embedding
-                features = torch.mean(x, dim=[2, 3])  # Spatial dimensions
-                
-                return features.cpu().numpy()
-        
-        except Exception as e:
-            print(f"Error extracting features: {e}")
-            import traceback
-            traceback.print_exc()
-            return None
+        layer_indices = [10, 14, 17]  # Example layer indices, adjust as needed
+        results = model.predict(source='path/to/your/video.mp4', embed=layer_indices)
+
+        # Iterate over results to access the embeddings
+        for result in results:
+            embeddings = result.embeddings  # List of feature tensors from the specified layers
+            # Now you can use these embeddings for your application
     
     # Define a method to run the cosine similarity on the two embedding which are return my feature extraction method
     def compute_similarity(self, embedding1, embedding2):

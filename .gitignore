@@ -39,6 +39,7 @@ apex/
 *.txt
 *.png
 *.pdf
+*.mp4
 
 # Other uncheckable file types
 *.zip
